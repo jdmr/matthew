@@ -1,0 +1,6 @@
+.DS_Store
+.sass-cache
+target
+*.log*
+nb-configuration.xml
+nbactions.xml
