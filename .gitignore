@@ -4,3 +4,6 @@ target
 *.log*
 nb-configuration.xml
 nbactions.xml
+matthew.properties
+.idea
+*.iml
