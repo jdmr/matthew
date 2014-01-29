@@ -38,6 +38,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -82,6 +83,8 @@ public class User implements Serializable, UserDetails {
         @JoinColumn(name = "user_id")}, inverseJoinColumns
             = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+    @ManyToOne(optional = false)
+    private Warehouse warehouse;
 
     public User() {
     }
@@ -300,6 +303,20 @@ public class User implements Serializable, UserDetails {
         sb.append(" ");
         sb.append(lastName);
         return sb.toString();
+    }
+
+    /**
+     * @return the warehouse
+     */
+    public Warehouse getWarehouse() {
+        return warehouse;
+    }
+
+    /**
+     * @param warehouse the warehouse to set
+     */
+    public void setWarehouse(Warehouse warehouse) {
+        this.warehouse = warehouse;
     }
 
     @Override

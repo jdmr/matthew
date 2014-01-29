@@ -21,18 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package edu.swau.matthew.utils;
 
 import edu.swau.matthew.dao.UserDao;
+import edu.swau.matthew.model.Organization;
 import edu.swau.matthew.model.Role;
 import edu.swau.matthew.model.User;
+import edu.swau.matthew.service.OrganizationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -41,38 +41,44 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
-    
+
     private static final Logger log = LoggerFactory.getLogger(Bootstrap.class);
-    
+
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private OrganizationService organizationService;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        log.info("Validating Roles");
-        Role adminRole = userDao.getRole("ROLE_ADMIN");
-        if (adminRole == null) {
-            adminRole = new Role("ROLE_ADMIN");
-            adminRole = userDao.createRole(adminRole);
+
+        Long organizationCount = organizationService.count();
+        if (organizationCount == 0) {
+            Organization organization = organizationService.create("SWAU", "SWAU", "Southwestern Adventist University");
+            log.info("Validating Roles");
+            Role adminRole = userDao.getRole("ROLE_ADMIN");
+            if (adminRole == null) {
+                adminRole = new Role("ROLE_ADMIN");
+                adminRole = userDao.createRole(adminRole);
+            }
+
+            Role userRole = userDao.getRole("ROLE_USER");
+            if (userRole == null) {
+                userRole = new Role("ROLE_USER");
+                userRole = userDao.createRole(userRole);
+            }
+
+            log.info("Validating Users");
+            User admin = userDao.get("admin@swau.edu");
+            if (admin == null) {
+                admin = new User("admin@swau.edu", "admin", "Admin", "User");
+                admin.addRole(adminRole);
+                admin.addRole(userRole);
+                userDao.create(admin);
+            }
         }
-        
-        Role userRole = userDao.getRole("ROLE_USER");
-        if (userRole == null) {
-            userRole = new Role("ROLE_USER");
-            userRole = userDao.createRole(userRole);
-        }
-        
-        log.info("Validating Users");
-        User admin = userDao.get("admin@swau.edu");
-        if (admin == null) {
-            admin = new User("admin@swau.edu", "admin", "Admin", "User");
-            admin.addRole(adminRole);
-            admin.addRole(userRole);
-            userDao.create(admin);
-        }
-        
+
         log.info("Application is running!");
     }
-    
-    
+
 }
