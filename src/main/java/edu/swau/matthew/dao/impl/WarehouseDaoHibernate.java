@@ -25,14 +25,11 @@
 package edu.swau.matthew.dao.impl;
 
 import edu.swau.matthew.dao.BaseDao;
-import edu.swau.matthew.dao.OrganizationDao;
-import edu.swau.matthew.model.Organization;
-import edu.swau.matthew.model.XOrganization;
+import edu.swau.matthew.dao.WarehouseDao;
+import edu.swau.matthew.model.Warehouse;
+import edu.swau.matthew.model.XWarehouse;
 import edu.swau.matthew.utils.Constants;
 import java.util.Date;
-import java.util.List;
-import org.hibernate.Criteria;
-import org.hibernate.criterion.Projections;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,42 +40,26 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Repository
 @Transactional
-public class OrganizationDaoHibernate extends BaseDao implements OrganizationDao {
+public class WarehouseDaoHibernate extends BaseDao implements WarehouseDao {
 
     @Override
-    @Transactional(readOnly = true)
-    public Long count() {
-        Criteria criteria = currentSession().createCriteria(Organization.class);
-        criteria.setProjection(Projections.rowCount());
-        List<Long> results = criteria.list();
-        Long organizationCount = results.get(0);
-        return organizationCount;
-    }
-
-    @Override
-    public Organization create(Organization organization) {
+    public Warehouse create(Warehouse warehouse) {
         Date date = new Date();
-        organization.setDateCreated(date);
-        organization.setLastUpdated(date);
-        currentSession().save(organization);
-
-        audit(organization, Constants.CREATE);
+        warehouse.setDateCreated(date);
+        warehouse.setLastUpdated(date);
+        currentSession().save(warehouse);
         
-        return organization;
+        audit(warehouse, Constants.CREATE);
+        
+        return warehouse;
     }
     
-    private void audit(Organization organization, String action) {
-        XOrganization xorganization = new XOrganization();
-        BeanUtils.copyProperties(organization, xorganization, new String[] {"id","version"});
-        xorganization.setAction(action);
-        xorganization.setOrganizationId(organization.getId());
-        currentSession().save(xorganization);
+    private void audit(Warehouse warehouse, String action) {
+        XWarehouse xwarehouse = new XWarehouse();
+        BeanUtils.copyProperties(warehouse, xwarehouse, new String[] {"id", "version"});
+        xwarehouse.setCompanyId(warehouse.getCompany().getId());
+        xwarehouse.setWarehouseId(warehouse.getId());
+        xwarehouse.setAction(action);
+        currentSession().save(xwarehouse);
     }
-
-    @Override
-    public Organization refresh(Organization organization) {
-        currentSession().refresh(organization);
-        return organization;
-    }
-    
 }

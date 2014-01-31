@@ -27,6 +27,7 @@ import edu.swau.matthew.dao.UserDao;
 import edu.swau.matthew.model.Organization;
 import edu.swau.matthew.model.Role;
 import edu.swau.matthew.model.User;
+import edu.swau.matthew.model.Warehouse;
 import edu.swau.matthew.service.OrganizationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -51,10 +52,12 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-
+        log.info("Making initial check...");
         Long organizationCount = organizationService.count();
         if (organizationCount == 0) {
-            Organization organization = organizationService.create("SWAU", "SWAU", "Southwestern Adventist University");
+            Organization organization = new Organization("SWAU", "SWAU", "Southwestern Adventist University", "admin@swau.edu");
+            organization = organizationService.create(organization);
+            
             log.info("Validating Roles");
             Role adminRole = userDao.getRole("ROLE_ADMIN");
             if (adminRole == null) {
@@ -74,11 +77,15 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
                 admin = new User("admin@swau.edu", "admin", "Admin", "User");
                 admin.addRole(adminRole);
                 admin.addRole(userRole);
+                
+                Warehouse warehouse = organization.getCompanies().get(0).getWarehouses().get(0);
+                admin.setWarehouse(warehouse);
+                
                 userDao.create(admin);
             }
         }
 
-        log.info("Application is running!");
+        log.info("Done. Application is running!");
     }
 
 }

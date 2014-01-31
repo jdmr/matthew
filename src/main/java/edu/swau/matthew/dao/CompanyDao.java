@@ -22,13 +22,16 @@
  * THE SOFTWARE.
  */
 
-package edu.swau.matthew.utils;
+package edu.swau.matthew.dao;
+
+import edu.swau.matthew.model.Company;
 
 /**
  *
  * @author J. David Mendoza <jdmendoza@swau.edu>
  */
-public class Constants {
-    public static final String LOGGED_USER = "LOGGED_USER";
-    public static final String CREATE = "CREATE";
+public interface CompanyDao {
+
+    public Company create(Company company);
+    
 }

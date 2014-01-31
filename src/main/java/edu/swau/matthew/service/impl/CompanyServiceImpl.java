@@ -22,13 +22,39 @@
  * THE SOFTWARE.
  */
 
-package edu.swau.matthew.utils;
+package edu.swau.matthew.service.impl;
+
+import edu.swau.matthew.dao.CompanyDao;
+import edu.swau.matthew.model.Company;
+import edu.swau.matthew.model.Warehouse;
+import edu.swau.matthew.service.BaseService;
+import edu.swau.matthew.service.CompanyService;
+import edu.swau.matthew.service.WarehouseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author J. David Mendoza <jdmendoza@swau.edu>
  */
-public class Constants {
-    public static final String LOGGED_USER = "LOGGED_USER";
-    public static final String CREATE = "CREATE";
+@Service
+@Transactional
+public class CompanyServiceImpl extends BaseService implements CompanyService {
+
+    @Autowired
+    private CompanyDao companyDao;
+    @Autowired
+    private WarehouseService warehouseService;
+    
+    @Override
+    public Company create(Company company) {
+        company = companyDao.create(company);
+        
+        Warehouse warehouse = new Warehouse("MAIN", "MAIN", company.getCreator(), company);
+        warehouseService.create(warehouse);
+        
+        return company;
+    }
+    
 }

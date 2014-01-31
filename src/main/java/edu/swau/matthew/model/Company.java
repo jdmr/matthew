@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package edu.swau.matthew.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -34,6 +34,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import org.hibernate.validator.constraints.NotBlank;
@@ -48,8 +50,9 @@ import org.springframework.cache.annotation.Cacheable;
     @UniqueConstraint(name = "company_code_idx", columnNames = {"organization_id", "code"}),
     @UniqueConstraint(name = "company_name_idx", columnNames = {"organization_id", "name"})
 })
-@Cacheable(value="company")
+@Cacheable(value = "company")
 public class Company implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -68,6 +71,25 @@ public class Company implements Serializable {
     private Organization organization;
     @OneToMany(mappedBy = "company")
     private List<Warehouse> warehouses;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    private Date dateCreated;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    private Date lastUpdated;
+    @Column(nullable = false)
+    private String creator;
+
+    public Company() {
+    }
+
+    public Company(String code, String name, String fullName, String creator, Organization organization) {
+        this.code = code;
+        this.name = name;
+        this.fullName = fullName;
+        this.creator = creator;
+        this.organization = organization;
+    }
 
     /**
      * @return the id
@@ -165,5 +187,47 @@ public class Company implements Serializable {
      */
     public void setWarehouses(List<Warehouse> warehouses) {
         this.warehouses = warehouses;
+    }
+
+    /**
+     * @return the dateCreated
+     */
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    /**
+     * @param dateCreated the dateCreated to set
+     */
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    /**
+     * @return the lastUpdated
+     */
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    /**
+     * @param lastUpdated the lastUpdated to set
+     */
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    /**
+     * @return the creator
+     */
+    public String getCreator() {
+        return creator;
+    }
+
+    /**
+     * @param creator the creator to set
+     */
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
 }

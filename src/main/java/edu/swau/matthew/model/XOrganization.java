@@ -21,48 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-
 package edu.swau.matthew.model;
 
-import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
-import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.cache.annotation.Cacheable;
 
 /**
  *
  * @author J. David Mendoza <jdmendoza@swau.edu>
  */
 @Entity
-@Table(name = "organizations")
-@Cacheable(value="organization")
-public class Organization implements Serializable {
-    
+@Table(name = "xorganizations")
+public class XOrganization {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Version
     private Integer version;
-    @NotBlank
-    @Column(unique = true, nullable = false, length = 6)
+    @Column(nullable = false, length = 6)
     private String code;
-    @Column(unique = true, nullable = false, length = 32)
+    @Column(nullable = false, length = 32)
     private String name;
-    @Column(unique = true, nullable = false, length = 128)
+    @Column(nullable = false, length = 128)
     private String fullName;
-    @OneToMany(mappedBy = "organization")
-    private List<Company> companies;
     @Temporal(TemporalType.TIMESTAMP)
     @Column(nullable = false)
     private Date dateCreated;
@@ -71,15 +61,12 @@ public class Organization implements Serializable {
     private Date lastUpdated;
     @Column(nullable = false)
     private String creator;
+    @Column(nullable = false, name = "action_")
+    private String action;
+    @Column(nullable = false)
+    private Long organizationId;
 
-    public Organization() {
-    }
-
-    public Organization(String code, String name, String fullName, String creator) {
-        this.code = code;
-        this.name = name;
-        this.fullName = fullName;
-        this.creator = creator;
+    public XOrganization() {
     }
 
     /**
@@ -153,20 +140,6 @@ public class Organization implements Serializable {
     }
 
     /**
-     * @return the companies
-     */
-    public List<Company> getCompanies() {
-        return companies;
-    }
-
-    /**
-     * @param companies the companies to set
-     */
-    public void setCompanies(List<Company> companies) {
-        this.companies = companies;
-    }
-
-    /**
      * @return the dateCreated
      */
     public Date getDateCreated() {
@@ -207,6 +180,33 @@ public class Organization implements Serializable {
     public void setCreator(String creator) {
         this.creator = creator;
     }
-    
-    
+
+    /**
+     * @return the action
+     */
+    public String getAction() {
+        return action;
+    }
+
+    /**
+     * @param action the action to set
+     */
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    /**
+     * @return the organizationId
+     */
+    public Long getOrganizationId() {
+        return organizationId;
+    }
+
+    /**
+     * @param organizationId the organizationId to set
+     */
+    public void setOrganizationId(Long organizationId) {
+        this.organizationId = organizationId;
+    }
+
 }

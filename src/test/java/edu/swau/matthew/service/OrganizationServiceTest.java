@@ -21,53 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
+package edu.swau.matthew.service;
 
-package edu.swau.matthew.service.impl;
-
-import edu.swau.matthew.dao.OrganizationDao;
-import edu.swau.matthew.model.Company;
+import edu.swau.matthew.config.ComponentConfig;
+import edu.swau.matthew.config.DataConfig;
+import edu.swau.matthew.config.MailConfig;
+import edu.swau.matthew.config.SecurityConfig;
 import edu.swau.matthew.model.Organization;
-import edu.swau.matthew.service.BaseService;
-import edu.swau.matthew.service.CompanyService;
-import edu.swau.matthew.service.OrganizationService;
+import edu.swau.matthew.test.BaseDaoTest;
+import org.junit.Assert;
+import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author J. David Mendoza <jdmendoza@swau.edu>
  */
-@Service
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(classes = {SecurityConfig.class, DataConfig.class, MailConfig.class, ComponentConfig.class})
 @Transactional
-public class OrganizationServiceImpl extends BaseService implements OrganizationService {
-    
+public class OrganizationServiceTest extends BaseDaoTest {
+
     @Autowired
-    private OrganizationDao organizationDao;
-    @Autowired
-    private CompanyService companyService;
+    private OrganizationService organizationService;
 
-    @Override
-    @Transactional(readOnly = true)
-    public Long count() {
-        return organizationDao.count();
+    @Test
+    public void shouldCreateOrganization() {
+        Organization organization = new Organization("TST-01", "TST-01", "TST-01", "admin@swau.edu");
+        organization = organizationService.create(organization);
+        Assert.assertNotNull("Should return an instance of organization", organization);
+        Assert.assertNotNull("The organization instance should have an ID", organization.getId());
+        Assert.assertNotNull("The organization instance should have a list of companies", organization.getCompanies());
     }
-
-    @Override
-    public Organization create(Organization organization) {
-        organization = organizationDao.create(organization);
-        
-        Company company = new Company("MATRIX", "Matrix", "Matrix", organization.getCreator(), organization);
-        companyService.create(company);
-        
-        organization = organizationDao.refresh(organization);
-        
-        return organization;
-    }
-
-    @Override
-    public Organization refresh(Organization organization) {
-        return organizationDao.refresh(organization);
-    }
-    
 }

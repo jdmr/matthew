@@ -22,52 +22,39 @@
  * THE SOFTWARE.
  */
 
-package edu.swau.matthew.service.impl;
+package edu.swau.matthew.test;
 
-import edu.swau.matthew.dao.OrganizationDao;
-import edu.swau.matthew.model.Company;
-import edu.swau.matthew.model.Organization;
-import edu.swau.matthew.service.BaseService;
-import edu.swau.matthew.service.CompanyService;
-import edu.swau.matthew.service.OrganizationService;
+import java.util.List;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.authentication.TestingAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 
 /**
  *
  * @author J. David Mendoza <jdmendoza@swau.edu>
  */
-@Service
-@Transactional
-public class OrganizationServiceImpl extends BaseService implements OrganizationService {
+public abstract class BaseTest {
+    
+    protected final transient Logger log = LoggerFactory.getLogger(getClass());
     
     @Autowired
-    private OrganizationDao organizationDao;
-    @Autowired
-    private CompanyService companyService;
-
-    @Override
-    @Transactional(readOnly = true)
-    public Long count() {
-        return organizationDao.count();
-    }
-
-    @Override
-    public Organization create(Organization organization) {
-        organization = organizationDao.create(organization);
-        
-        Company company = new Company("MATRIX", "Matrix", "Matrix", organization.getCreator(), organization);
-        companyService.create(company);
-        
-        organization = organizationDao.refresh(organization);
-        
-        return organization;
-    }
-
-    @Override
-    public Organization refresh(Organization organization) {
-        return organizationDao.refresh(organization);
+    private SessionFactory sessionFactory;
+    
+    protected Session currentSession() {
+        return sessionFactory.getCurrentSession();
     }
     
+    protected Authentication authenticate(UserDetails principal, String credentials, List<GrantedAuthority> authorities) {
+        Authentication authentication = new TestingAuthenticationToken(principal, credentials, authorities);
+        authentication.setAuthenticated(true);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return authentication;
+    }
 }

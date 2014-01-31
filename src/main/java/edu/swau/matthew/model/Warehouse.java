@@ -25,6 +25,7 @@
 package edu.swau.matthew.model;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -32,6 +33,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
 import org.hibernate.validator.constraints.NotBlank;
@@ -61,6 +64,24 @@ public class Warehouse implements Serializable{
     private String name;
     @ManyToOne(optional = false)
     private Company company;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    private Date dateCreated;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(nullable = false)
+    private Date lastUpdated;
+    @Column(nullable = false)
+    private String creator;
+
+    public Warehouse() {
+    }
+
+    public Warehouse(String code, String name, String creator, Company company) {
+        this.code = code;
+        this.name = name;
+        this.creator = creator;
+        this.company = company;
+    }
 
     /**
      * @return the id
@@ -130,6 +151,48 @@ public class Warehouse implements Serializable{
      */
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    /**
+     * @return the dateCreated
+     */
+    public Date getDateCreated() {
+        return dateCreated;
+    }
+
+    /**
+     * @param dateCreated the dateCreated to set
+     */
+    public void setDateCreated(Date dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    /**
+     * @return the lastUpdated
+     */
+    public Date getLastUpdated() {
+        return lastUpdated;
+    }
+
+    /**
+     * @param lastUpdated the lastUpdated to set
+     */
+    public void setLastUpdated(Date lastUpdated) {
+        this.lastUpdated = lastUpdated;
+    }
+
+    /**
+     * @return the creator
+     */
+    public String getCreator() {
+        return creator;
+    }
+
+    /**
+     * @param creator the creator to set
+     */
+    public void setCreator(String creator) {
+        this.creator = creator;
     }
     
 }

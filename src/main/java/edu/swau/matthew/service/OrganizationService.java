@@ -34,6 +34,7 @@ public interface OrganizationService {
 
     public Long count();
 
-    public Organization create(String code, String name, String fullName);
-    
+    public Organization create(Organization organization);
+
+    public Organization refresh(Organization organization);
 }

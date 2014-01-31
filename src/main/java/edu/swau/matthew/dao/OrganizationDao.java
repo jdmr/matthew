@@ -24,6 +24,8 @@
 
 package edu.swau.matthew.dao;
 
+import edu.swau.matthew.model.Organization;
+
 /**
  *
  * @author J. David Mendoza <jdmendoza@swau.edu>
@@ -31,5 +33,9 @@ package edu.swau.matthew.dao;
 public interface OrganizationDao {
 
     public Long count();
+
+    public Organization create(Organization organization);
+
+    public Organization refresh(Organization organization);
     
 }

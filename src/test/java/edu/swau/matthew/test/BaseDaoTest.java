@@ -22,13 +22,12 @@
  * THE SOFTWARE.
  */
 
-package edu.swau.matthew.utils;
+package edu.swau.matthew.test;
 
 /**
  *
  * @author J. David Mendoza <jdmendoza@swau.edu>
  */
-public class Constants {
-    public static final String LOGGED_USER = "LOGGED_USER";
-    public static final String CREATE = "CREATE";
+public abstract class BaseDaoTest extends BaseTest {
+    
 }
