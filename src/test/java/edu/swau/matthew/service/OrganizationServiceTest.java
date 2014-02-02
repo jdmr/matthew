@@ -28,7 +28,7 @@ import edu.swau.matthew.config.DataConfig;
 import edu.swau.matthew.config.MailConfig;
 import edu.swau.matthew.config.SecurityConfig;
 import edu.swau.matthew.model.Organization;
-import edu.swau.matthew.test.BaseDaoTest;
+import edu.swau.matthew.test.BaseServiceTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,7 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = {SecurityConfig.class, DataConfig.class, MailConfig.class, ComponentConfig.class})
 @Transactional
-public class OrganizationServiceTest extends BaseDaoTest {
+public class OrganizationServiceTest extends BaseServiceTest {
 
     @Autowired
     private OrganizationService organizationService;
@@ -57,4 +57,5 @@ public class OrganizationServiceTest extends BaseDaoTest {
         Assert.assertNotNull("The organization instance should have an ID", organization.getId());
         Assert.assertNotNull("The organization instance should have a list of companies", organization.getCompanies());
     }
+    
 }

@@ -24,7 +24,9 @@
 
 package edu.swau.matthew.dao;
 
+import edu.swau.matthew.model.Company;
 import edu.swau.matthew.model.Warehouse;
+import java.util.List;
 
 /**
  *
@@ -33,5 +35,7 @@ import edu.swau.matthew.model.Warehouse;
 public interface WarehouseDao {
 
     public Warehouse create(Warehouse warehouse);
+
+    public List<Warehouse> list(Company company);
     
 }

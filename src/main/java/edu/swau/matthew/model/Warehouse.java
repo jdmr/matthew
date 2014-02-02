@@ -32,13 +32,16 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.cache.annotation.Cacheable;
 
 /**
  *
@@ -49,7 +52,10 @@ import org.springframework.cache.annotation.Cacheable;
     @UniqueConstraint(name = "warehouse_code_idx", columnNames = {"company_id", "code"}),
     @UniqueConstraint(name = "warehouse_name_idx", columnNames = {"company_id", "name"})
 })
-@Cacheable(value="warehouse")
+@NamedQueries({
+    @NamedQuery(name = "findWarehousesByCompany", query = "select w from Warehouse w inner join w.company c where c.id = :companyId")
+})
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Warehouse implements Serializable{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -28,6 +28,6 @@ package edu.swau.matthew.test;
  *
  * @author J. David Mendoza <jdmendoza@swau.edu>
  */
-public abstract class BaseDaoTest extends BaseTest {
+public abstract class BaseServiceTest extends BaseTest {
     
 }

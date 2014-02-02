@@ -26,10 +26,13 @@ package edu.swau.matthew.dao.impl;
 
 import edu.swau.matthew.dao.BaseDao;
 import edu.swau.matthew.dao.WarehouseDao;
+import edu.swau.matthew.model.Company;
 import edu.swau.matthew.model.Warehouse;
 import edu.swau.matthew.model.XWarehouse;
 import edu.swau.matthew.utils.Constants;
 import java.util.Date;
+import java.util.List;
+import org.hibernate.Query;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,5 +64,12 @@ public class WarehouseDaoHibernate extends BaseDao implements WarehouseDao {
         xwarehouse.setWarehouseId(warehouse.getId());
         xwarehouse.setAction(action);
         currentSession().save(xwarehouse);
+    }
+
+    @Override
+    public List<Warehouse> list(Company company) {
+        Query query = currentSession().getNamedQuery("findWarehousesByCompany");
+        query.setLong("companyId", company.getId());
+        return query.list();
     }
 }

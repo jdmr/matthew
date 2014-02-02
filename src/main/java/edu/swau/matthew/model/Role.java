@@ -29,7 +29,8 @@ import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import org.springframework.cache.annotation.Cacheable;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.security.core.GrantedAuthority;
 
 /**
@@ -37,8 +38,8 @@ import org.springframework.security.core.GrantedAuthority;
  * @author J. David Mendoza <jdmendoza@swau.edu>
  */
 @Entity
-@Cacheable(value="role")
 @Table(name = "roles")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Role implements Serializable, GrantedAuthority {
 
     @Id

@@ -20,9 +20,9 @@
     </appender>
 
     <logger name="edu.swau" level="DEBUG"/>
-    <logger name="org.springframework.security" level="DEBUG"/>
 
     <!--
+    <logger name="org.springframework.security" level="DEBUG"/>
 
     <logger name="org.hibernate.type" level="DEBUG"/>
     <logger name="org.hibernate.SQL" level="DEBUG"/>

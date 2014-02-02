@@ -25,9 +25,11 @@
 package edu.swau.matthew.service.impl;
 
 import edu.swau.matthew.dao.WarehouseDao;
+import edu.swau.matthew.model.Company;
 import edu.swau.matthew.model.Warehouse;
 import edu.swau.matthew.service.BaseService;
 import edu.swau.matthew.service.WarehouseService;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,6 +49,11 @@ public class WarehouseServiceImpl extends BaseService implements WarehouseServic
     public Warehouse create(Warehouse warehouse) {
         warehouse = warehouseDao.create(warehouse);
         return warehouse;
+    }
+
+    @Override
+    public List<Warehouse> list(Company company) {
+        return warehouseDao.list(company);
     }
     
 }

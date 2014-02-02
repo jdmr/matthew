@@ -37,8 +37,9 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.Version;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.cache.annotation.Cacheable;
 
 /**
  *
@@ -46,7 +47,7 @@ import org.springframework.cache.annotation.Cacheable;
  */
 @Entity
 @Table(name = "organizations")
-@Cacheable(value="organization")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Organization implements Serializable {
     
     @Id

@@ -38,8 +38,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 import javax.persistence.Version;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.validator.constraints.NotBlank;
-import org.springframework.cache.annotation.Cacheable;
 
 /**
  *
@@ -50,7 +51,7 @@ import org.springframework.cache.annotation.Cacheable;
     @UniqueConstraint(name = "company_code_idx", columnNames = {"organization_id", "code"}),
     @UniqueConstraint(name = "company_name_idx", columnNames = {"organization_id", "name"})
 })
-@Cacheable(value = "company")
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class Company implements Serializable {
 
     @Id

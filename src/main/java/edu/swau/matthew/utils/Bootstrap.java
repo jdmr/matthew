@@ -24,23 +24,28 @@
 package edu.swau.matthew.utils;
 
 import edu.swau.matthew.dao.UserDao;
+import edu.swau.matthew.model.Company;
 import edu.swau.matthew.model.Organization;
 import edu.swau.matthew.model.Role;
 import edu.swau.matthew.model.User;
 import edu.swau.matthew.model.Warehouse;
 import edu.swau.matthew.service.OrganizationService;
+import edu.swau.matthew.service.WarehouseService;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
  * @author J. David Mendoza <jdmendoza@swau.edu>
  */
 @Component
+@Transactional
 public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final Logger log = LoggerFactory.getLogger(Bootstrap.class);
@@ -49,6 +54,8 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
     private UserDao userDao;
     @Autowired
     private OrganizationService organizationService;
+    @Autowired
+    private WarehouseService warehouseService;
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -78,7 +85,11 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
                 admin.addRole(adminRole);
                 admin.addRole(userRole);
                 
-                Warehouse warehouse = organization.getCompanies().get(0).getWarehouses().get(0);
+                organization = organizationService.refresh(organization);
+                log.debug("Companies: {}", organization.getCompanies());
+                Company company = organization.getCompanies().get(0);
+                List<Warehouse> warehouses = warehouseService.list(company);
+                Warehouse warehouse = warehouses.get(0);
                 admin.setWarehouse(warehouse);
                 
                 userDao.create(admin);
